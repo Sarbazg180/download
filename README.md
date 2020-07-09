@@ -15,5 +15,5 @@ ___
 *  `-v`  display version
 ___
 ### Author
-Mohammad Mohammadi
-![Instagram]()
+Mohammad Mohammadi  
+[Instagram](https://instagram.com/sarbazg180)
