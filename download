@@ -1,0 +1,126 @@
+#!/bin/bash
+
+red="\033[31;1m"
+nc="\033[m"
+green="\033[32;1m"
+b_p="\033[0;41m"
+
+############################################
+
+while getopts "t:l:p:v" op;do
+	case "$op" in
+		t)
+			s_time="$OPTARG"
+		;;
+		l)
+			d_link="$OPTARG"
+		;;
+		p)
+			path="$OPTARG"
+			if [ ! -d "$path" ];then
+				echo -e "${red}the directory is not existed!${nc}"
+				exit
+			fi
+		;;
+		v)
+			echo -e "${green}1.0${nc}"
+			exit
+		;;
+		\?)
+			echo -e "${red}invalid option!${nc}"
+			exit;
+		;;
+	esac
+done
+
+#############################################
+
+s_min="${s_time/*:/}"
+s_hour="${s_time/:*/}"
+start_min="${s_min/#0/}"
+start_hour="${s_hour/#0/}"
+start_time=$((start_hour * 60 + start_min))
+
+#############################################
+
+function check
+{
+	clear
+	echo -e "${green}\n now your download will start in time that you set...${nc}"
+	while true;do
+		r_min=`date +%M`
+		r_hour=`date +%H`
+		real_min="${r_min/#0/}"
+		real_hour="${r_hour/#0/}"
+		real_time=$((real_hour * 60 + real_min))
+
+#############################################
+
+		if [ "$real_time" == "$start_time" ];then
+			if [ ! "$path" == "" ];then
+				wget -P "$path" "$d_link"
+				exit
+			else
+				wget "$d_link"
+				exit
+			fi
+			sleep 1
+		fi
+	done
+}
+function check_time
+{
+	start_hour=$((start_hour+0))
+	start_min=$((start_min+0))
+	if [ "$start_hour" -ge "24" ] || [ "$start_min" -ge "60" ];then
+		echo -e "${red}invalid time${nc}"
+		exit
+	fi
+}
+function check_var
+{
+	
+	if [ "$d_link" == "$s_time" ];then
+		echo -e " ${b_p}options             mouod developer${nc}\n${red}
+ [-t]         time(24 hour format)
+ [-l]         download link
+ [-p]         download path
+ [-v]         version${nc}
+ "
+		exit
+	elif [ "$d_link" == "" ];then
+		echo -e "${red}please set the donwload link using [-l] option${nc}"
+		exit
+	elif [ "$s_time" == "" ];then
+		echo -e "${red}please download set time using [-t] option${nc}"
+		exit
+	fi
+}
+function check_path
+{
+	if [ ! "$path" == "" ];then
+		if [ "$s_time" == "$d_link" ];then
+			echo -e "${red}please set download link and time using
+[-l] and [-t] options${nc}"
+			exit
+		elif [ "$s_time" == "" ];then
+			echo -e "${red}please set download time using [-t] option${nc}"
+			exit
+		elif [ "d_link" == "" ];then
+			echo -e "${red}please set download link using [-l] option${nc}"
+			exit
+		fi
+	fi
+}
+if [ ! `dpkg -s wget 2> /dev/null | grep -c "ok installed"` == "1" ];then
+	echo -e "${green}installing wget...${nc}"
+	apt update &> /dev/null && apt install wget -y &> /dev/null
+	if [ ! "$?" == "0" ];then
+		echo -e "${red}error while installing a wget!${nc}"
+		exit
+	fi
+fi
+check_time
+check_path
+check_var
+check
