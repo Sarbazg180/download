@@ -16,4 +16,4 @@ ___
 ___
 ### Author
 Mohammad Mohammadi  
-[Instagram](https://instagram.com/sarbazg180)
+follow me on [Instagram](https://instagram.com/sarbazg180)
