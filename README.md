@@ -1,4 +1,5 @@
 # download  
+![alt screenshot](https://github.com/Sarbazg180/download/blob/master/screenshot.png)  
 this script provides you a timing download , you can set the time and then it start downloading at that time
 
 ### installation
